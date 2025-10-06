@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - JIT Skill Connect{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+
+<body>
+    
+
+<div class="edit-profile-container">
+  <h2 class="page-title">Edit Profile</h2>
+
+  <form method="POST" enctype="multipart/form-data" class="edit-profile-form">
+    {% csrf_token %}
+
+    <fieldset class="profile-fieldset">
+      <legend>Profile Information</legend>
+
+      <div class="form-group">
+        {{ profile_form.branch.label_tag }}
+        {{ profile_form.branch }}
+      </div>
+
+      <div class="form-group">
+        {{ profile_form.contact.label_tag }}
+        {{ profile_form.contact }}
+      </div>
+
+      <div class="form-group">
+        {{ profile_form.languages.label_tag }}
+        {{ profile_form.languages }}
+      </div>
+
+      <div class="form-group">
+        {{ profile_form.achievements.label_tag }}
+        {{ profile_form.achievements }}
+      </div>
+
+      <div class="form-group">
+        {{ profile_form.resume.label_tag }}
+        {{ profile_form.resume }}
+      </div>
+
+      <div class="form-group">
+        {{ profile_form.profile_photo.label_tag }}
+        {{ profile_form.profile_photo }}
+
+        {% if profile.profile_photo %}
+          <div class="current-photo">
+            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.username }}">
+          </div>
+        {% endif %}
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn-save">Save Changes</button>
+  </form>
+</div>
+{% endblock %}
+
+
+
+</body>

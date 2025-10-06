@@ -1,0 +1,24 @@
+<!-- {% extends 'base.html' %}
+{% block content %} -->
+<div class="team-container">
+  <h2>{{ team.name }}</h2>
+  <p>{{ team.description }}</p>
+  <p><strong>Creator:</strong> {{ team.creator.username }}</p>
+
+  <h3>Members</h3>
+  <ul>
+    {% for member in team.members.all %}
+      <li>{{ member.username }}</li>
+    {% empty %}
+      <p>No members yet.</p>
+    {% endfor %}
+
+
+    
+  </ul>
+
+  {% if request.user == team.creator %}
+    <a href="{% url 'add_member' team.id %}" class="btn-login">+ Add Member</a>
+  {% endif %}
+</div>
+<!-- {% endblock %} -->

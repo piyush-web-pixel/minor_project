@@ -1,0 +1,57 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/team.css' %}">
+
+<div class="team-members-container">
+  <h2 style="margin-bottom:25px;">Team Members of {{ team.name }}</h2>
+
+  {% if team.members.all %}
+    <div class="members-grid">
+      {% for member in team.members.all %}
+        {% if member.studentprofile %}
+          <div class="member-card">
+            <!-- Profile Photo -->
+            <div class="member-photo-container">
+              {% if member.studentprofile.profile_photo %}
+                <img src="{{ member.studentprofile.profile_photo.url }}" alt="{{ member.username }}" class="member-photo">
+              {% else %}
+                <div class="member-photo-placeholder">{{ member.username|slice:":1" }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Name & Branch -->
+            <h3 class="member-name">{{ member.username }}</h3>
+            <p class="member-branch">{{ member.studentprofile.branch }}</p>
+
+            <!-- Skills -->
+            <div class="member-skills">
+              {% for skill in member.studentprofile.skills.all %}
+                <span class="skill-badge">{{ skill.name }}</span>
+              {% empty %}
+                <span class="no-skill">No skills added</span>
+              {% endfor %}
+            </div>
+
+            <!-- View Profile Button -->
+            <a href="{% url 'profile_detail' member.studentprofile.id %}" class="btn-login">View Profile</a>
+
+            <!-- Remove Member Button (only visible to team creator and not for themselves) -->
+            {% if request.user == team.creator and member != team.creator %}
+              <form method="POST" action="{% url 'remove_member' team.id member.id %}" style="margin-top:10px;">
+                {% csrf_token %}
+                <button type="submit" class="btn-remove">Remove Member</button>
+              </form>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="member-card">
+            <h3>{{ member.username }}</h3>
+            <p>No profile information available.</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No members in this team yet.</p>
+  {% endif %}
+</div>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - JIT Skill Connect{% endblock %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.user.username }}'s Profile - JIT Skill Connect</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+ body{
+
+  background-color:#6a11cb;
+
+
+        } 
+        .profile-container {
+            max-width: 700px;
+            /* margin-top: 50px; */
+            margin: 100px auto;
+            /* background: #fff; */
+              background: linear-gradient(135deg, #6a11cb, #2575fc);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px black,(0,0,0.1);
+            text-align: center;
+        }
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .profile-container h2 {
+            margin-bottom: 15px;
+            color:white;
+        }
+        .profile-container p {
+            font-size: 16px;
+            margin: 8px 0;
+            color: white;
+        }
+        .skills-list {
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .skills-list span {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 3px;
+            font-size: 14px;
+        }
+        .btn-whatsapp {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #2575fc;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        
+        {% if profile.profile_photo %}
+            <img src="{{ profile.profile_photo.url }}" alt="{{ profile.user.username }}" class="profile-photo">
+        {% endif %}
+        
+        <h2>{{ profile.user.username }}'s Profile</h2>
+        
+        <p><strong>Branch:</strong> {{ profile.branch }}</p>
+        <p><strong>Contact:</strong> {{ profile.contact }}</p>
+        
+        {% if profile.contact %}
+        <p>
+            <a href="https://wa.me/{{ profile.contact|urlencode }}?text=Hi%20{{ profile.user.username }}!%20I%20found%20your%20profile%20on%20JIT%20Skill%20Connect." 
+               target="_blank" class="btn-whatsapp">
+                Message on WhatsApp
+            </a>
+        </p>
+        {% endif %}
+        
+        <p><strong>Skills:</strong></p>
+        <div class="skills-list">
+            {% for skill in profile.skills.all %}
+                <span>{{ skill.name }}</span>
+            {% empty %}
+                <span>No skills added yet</span>
+            {% endfor %}
+        </div>
+
+        <p><strong>Programming Languages:</strong> {{ profile.languages|default:"Not specified" }}</p>
+        <p><strong>Achievements:</strong> {{ profile.achievements|default:"Not specified" }}</p>
+
+        {% if profile.resume %}
+            <p><strong>Resume:</strong> <a href="{{ profile.resume.url }}" target="_blank">View / Download</a></p>
+        {% endif %}
+        
+        <a href="{% url 'search_students' %}" class="btn-back">Back to Search</a>
+        
+    </div>
+
+
+    {% endblock %}
+
+</body>
+</html>

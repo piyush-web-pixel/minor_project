@@ -1,0 +1,52 @@
+<!-- {% extends 'base.html' %} -->
+{% load static %}
+
+<!-- {% block title %}Add Member - {{ team.name }}{% endblock %}
+
+{% block content %} -->
+<link rel="stylesheet" href="{% static 'css/my_profile.css' %}">
+
+<div class="form-container">
+  <h2>Add Member to "{{ team.name }}"</h2>
+
+  <!-- Search Form -->
+  <form method="GET" style="margin-bottom:20px;">
+    <input type="text" name="q" placeholder="Search student by username or skill..." style="padding:10px; width:60%; border-radius:6px; border:1px solid #ccc;">
+    <button type="submit" class="btn-login" style="padding:10px 20px;">Search</button>
+  </form>
+
+  <!-- Search Results -->
+  {% if students %}
+    <h3>Search Results:</h3>
+    <ul>
+      {% for student in students %}
+        <li style="margin-bottom:15px; display:flex; align-items:center; gap:15px; padding:10px; background:#f0f4ff; border-radius:10px;">
+          
+          {% if student.profile_photo %}
+            <img src="{{ student.profile_photo.url }}" alt="{{ student.username }}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+          {% endif %}
+
+          <div>
+            <strong>{{ student.username }}</strong> — {{ student.branch }}<br>
+            Skills: 
+            {% for skill in student.skills.all %}
+              {{ skill.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+              No skills
+            {% endfor %}
+          </div>
+
+          <!-- Add to Team Form -->
+          <form method="POST" action="{% url 'add_member' team.id %}" style="margin-left:auto;">
+            {% csrf_token %}
+            <input type="hidden" name="student_id" value="{{ student.id }}">
+            <button type="submit" class="btn-login">Add</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% elif request.GET.q %}
+    <p>No students found matching "{{ request.GET.q }}".</p>
+  {% endif %}
+</div>
+<!-- {% endblock %} -->

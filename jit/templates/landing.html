@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JIT Skill Connect | Connect, Collaborate, Create</title>
+  <meta name="description" content="Discover talented students, showcase your skills, and form balanced teams for hackathons, projects, and events at JIT." />
+  <meta name="author" content="JIT Skill Connect Team" />
+  <link rel="stylesheet" href='{% static "css/landing.css" %}'>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo" style="color: white;">✨ JIT Skill Connect</div>
+    <div>
+      <a href="#hero">Home</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="#cta">Join Now</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero">
+    <h1>Connect. Collaborate. Create.</h1>
+    <p>Discover talented students, showcase your skills, and form balanced teams for hackathons, projects, and college events.</p>
+    <a href="{% url 'register' %}" class="btn btn-register">Register</a>
+    <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+  </section>
+
+ <!-- Features Section -->
+<section id="features">
+  <h2>💡 Features</h2>
+  <div class="feature-cards">
+    
+    <div class="card">
+      <h3>Skill Showcase</h3>
+      <p>Add skills, achievements, and resume to highlight your expertise.</p>
+    </div>
+
+    <div class="card">
+      <h3>Smart Search</h3>
+      <p>Find students and teammates by skills, branch, or name quickly.</p>
+    </div>
+
+    <div class="card">
+      <h3>Team Creation</h3>
+      <p>Create your own team, manage members, and collaborate on projects.</p>
+    </div>
+
+    <div class="card">
+      <h3>Team Collaboration</h3>
+      <p>Join teams, request to join, and connect with leaders for collaboration.</p>
+    </div>
+
+    <div class="card">
+      <h3>WhatsApp Integration</h3>
+      <p>Contact teammates directly via WhatsApp for faster communication.</p>
+    </div>
+
+    <div class="card">
+      <h3>Dashboard</h3>
+      <p>View all your teams, members, and manage your collaborations easily.</p>
+    </div>
+
+    <div class="card">
+      <h3>User Profiles</h3>
+      <p>View detailed student profiles including skills, achievements, and resumes.</p>
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>🎯 About JIT Skill Connect</h2>
+    <p>JIT Skill Connect helps students form balanced teams, discover talent, and create amazing projects together. Collaboration has never been easier!</p>
+  </section>
+
+  <!-- Call-to-Action Section -->
+  <section id="cta">
+    <h2>Ready to join?</h2>
+    <a href="{% url 'register' %}" class="btn btn-register">Register Now</a>
+    <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+  </section>
+
+  <footer>© 2025 JIT Skill Connect | Made with ❤️ by Team JIT</footer>
+
+</body>
+</html>

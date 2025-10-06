@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - JIT Skill Connect{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/my_profile.css' %}">
+
+<div class="profile-wrapper">
+  <div class="profile-card">
+
+    <!-- Profile Photo -->
+    {% if profile.profile_photo %}
+      <div class="profile-photo">
+        <img src="{{ profile.profile_photo.url }}" alt="{{ profile.user.username }}">
+      </div>
+    {% endif %}
+
+    <!-- Username -->
+    <h2 class="profile-username">{{ profile.user.username }}</h2>
+
+    <!-- Profile Info -->
+    <div class="profile-section">
+      <h3>Profile Details</h3>
+      <div class="info-grid">
+        <p><strong>Branch:</strong> {{ profile.branch|default:"Not specified" }}</p>
+        <p><strong>Contact:</strong> {{ profile.contact|default:"Not provided" }}</p>
+      </div>
+    </div>
+
+    <!-- WhatsApp Contact -->
+    {% if profile.contact %}
+      <div class="profile-section">
+        <h3>Contact via WhatsApp</h3>
+        <a href="https://wa.me/{{ profile.contact|urlencode }}?text=Hi%20{{ profile.user.username }}!%20I%20found%20your%20profile%20on%20JIT%20Skill%20Connect."
+           target="_blank" class="whatsapp-link">
+          Message on WhatsApp
+        </a>
+      </div>
+    {% endif %}
+
+    <!-- Skills Section -->
+    <div class="profile-section">
+      <h3>Skills</h3>
+      <div class="skills-list">
+        {% for skill in profile.skills.all %}
+          <span class="skill">{{ skill.name }}</span>
+        {% empty %}
+          <p class="no-skill">No skills added yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Languages and Achievements -->
+    <div class="profile-section">
+      <h3>Programming Languages</h3>
+      <p>{{ profile.languages|default:"Not specified" }}</p>
+
+      <h3>Achievements</h3>
+      <p>{{ profile.achievements|default:"Not specified" }}</p>
+    </div>
+
+    <!-- Resume -->
+    {% if profile.resume %}
+      <div class="profile-section">
+        <h3>Resume</h3>
+        <a href="{{ profile.resume.url }}" target="_blank" class="resume-link">View / Download</a>
+      </div>
+    {% endif %}
+
+    <!-- Buttons -->
+    <div class="profile-actions">
+      <a href="{% url 'edit_profile' %}" class="btn-primary">Edit Profile</a>
+      <a href="{% url 'logout' %}" class="btn-secondary">Logout</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

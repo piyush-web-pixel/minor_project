@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Students - JIT Skill Connect</title>
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <style>
+/* Search Students Page */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body { scroll-behavior: smooth;}
+
+
+nav {
+      position: fixed;
+      top:0; left:0; width:100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      z-index: 1000;
+    }
+
+
+
+
+        /* Keep your theme, just improve layout */
+        .search-container {
+            max-width:100%;
+    
+        }
+        .card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .card li {
+            background: #f0f4ff;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        .card li strong {
+            color: #6a11cb;
+            font-size: 1.1rem;
+        }
+        .card li .skills {
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+        .btn-login {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #2575fc;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .btn-login:hover {
+            background: #0056b3;
+        }
+        .no-results {
+            text-align: center;
+            color: red;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+ <!-- Navigation -->
+    <nav>
+        <div class="logo">✨ JIT Skill Connect</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Home</a>
+            <a href="{% url 'search_students' %}">Search Students</a>
+            <a href="{% url 'my_profile' %}">Profile</a>
+
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+
+
+    <div class="container search-container">
+    <div class="card">
+        <h2 style="text-align:center; margin-bottom:25px;">Search Students by Skill</h2>
+
+        <form method="GET" class="search-form" style="display:flex; gap:10px; margin-bottom:30px;">
+            <input type="text" name="skill" placeholder="Enter skill (e.g., Frontend)" 
+                   style="flex:1; padding:10px 15px; border-radius:8px; border:1px solid #ccc;">
+            <button type="submit" 
+                    style="padding:10px 20px; border:none; border-radius:8px; background:#2575fc; color:white; cursor:pointer;">
+                Search
+            </button>
+        </form>
+
+        {% if students %}
+            <ul>
+                {% for s in students %}
+                    <li style="margin-bottom:20px; display:flex; align-items:center; gap:15px;">
+
+                        {% if s.profile_photo %}
+                            <img src="{{ s.profile_photo.url }}" alt="{{ s.user.username }}" 
+                                 style="width:80px; height:80px; border-radius:50%; object-fit:cover;">
+                        {% endif %}
+
+                        <div>
+                            <strong>{{ s.user.username }}</strong> — {{ s.branch }} — {{ s.contact }}<br>
+                            <span class="skills"><strong>Skills:</strong>
+                                {% for sk in s.skills.all %}
+                                    {{ sk.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
+                            <br>
+                            <a href="{% url 'profile_detail' s.id %}" class="btn-login" 
+                               style="display:inline-block; margin-top:5px; padding:5px 10px; background:#2575fc; color:white; border-radius:5px; text-decoration:none;">
+                               View Full Profile
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif request.GET.skill %}
+            <p class="no-results">No students found with that skill.</p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIT Skill Connect | Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo" style="color: white;">✨ JIT Skill Connect</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Home</a>
+            <a href="{% url 'search_students' %}">Search Students</a>
+            <a href="{% url 'my_profile' %}">Profile</a>
+            <a href="{% url 'my_teams' %}">Teams</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+ <!-- Hero + Quick Actions Combined -->
+<section id="hero" style="padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #6a11cb, #2575fc); color: white;">
+    <h1 style="font-size: 2.8rem; margin-bottom: 20px;">Welcome, {{ request.user.username }}!</h1>
+    <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 40px;">
+        Discover talented students, showcase your skills, form teams, and collaborate on amazing projects.
+    </p>
+
+    <div class="feature-cards" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+        <div class="card" style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; width: 250px; text-align: center;">
+            <h3>Add / Update Skills</h3>
+    
+            <a href="{% url 'add_skills' %}" class="btn btn-register">Go</a>
+        </div>
+        <div class="card" style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; width: 250px; text-align: center;">
+            <h3>Browse / Search Students</h3>
+            <!-- <p>Search for students by skill or browse all registered students to form teams easily.</p> -->
+            <a href="{% url 'search_students' %}" class="btn btn-register">Go</a>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Featured Students Section -->
+    <section id="featured">
+        <h2>🌟 Latest Registered Students</h2>
+        <br>
+        <br>
+        <div class="feature-cards">
+            {% for student in latest_students %}
+                <div class="card">
+               {% if student.profile_photo %}
+                    <img src="{{ student.profile_photo.url }}" 
+                         alt="{{ student.user.username }}" 
+                         style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:10px;">
+                {% endif %}
+                        <p>{{ student.user.username }}</p>
+                
+                    <p>{{ student.branch }}</p>
+                    <p>Skills: 
+                        {% for skill in student.skills.all %}
+                            {{ skill.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            No skills yet
+                        {% endfor %}
+                    </p>
+                    <a href="{% url 'profile_detail' student.id %}" class="btn btn-login">View Profile</a>
+                </div>
+            {% empty %}
+                <p>No students registered yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <footer>
+        © 2025 JIT Skill Connect | Made with ❤️ by Team JIT
+    </footer>
+</body>
+</html>

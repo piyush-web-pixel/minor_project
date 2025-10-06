@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - JIT Skill Connect</title>
+<link rel="stylesheet" href='{% static "css/login.css" %}'>
+<link rel="stylesheet" href='{% static "css/landing.css" %}'>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+</head>
+<body>
+
+  
+  <!-- Navigation -->
+  <nav>
+    <div class="logo" style="color: white;">✨ JIT Skill Connect</div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/">Features</a>
+      <a href="/">About</a>
+
+    </div>
+  </nav>
+
+  <div class="login-box">
+    <h2>Student Login</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <p class="error">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <a class="register-link" href="{% url 'register' %}">Don't have an account? Register</a>
+  </div>
+</body>
+</html>
