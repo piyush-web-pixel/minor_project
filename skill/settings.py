@@ -75,10 +75,14 @@ WSGI_APPLICATION = 'skill.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
+        'default': dj_database_url.parse(
+        os.environ.get("postgresql://django_db_tktg_user:qENedM3AVP04tk63B7FlLQxbGuH4zUSm@dpg-d4e5p8mmcj7s73cg0as0-a/django_db_tktg")
+    )
 }
 
 
@@ -129,3 +133,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+import os
+import dj_database_url
