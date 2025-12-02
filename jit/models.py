@@ -53,3 +53,27 @@ class TeamJoinRequest(models.Model):
 
     def __str__(self):
         return f"{self.user.username} → {self.team.name}"
+
+
+
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class TeamInvitation(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='invitations')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_invitations')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_invitations')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    reason = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Invite from {self.sender.username} to {self.receiver.username} for {self.team.name}"

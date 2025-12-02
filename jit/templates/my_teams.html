@@ -72,7 +72,7 @@
                 {% endif %}
               {% endfor %}
               {% if team.members.count > 3 %}
-                ... <a href="{% url 'team_members' team.id %}" class="view-all-link">View All</a>
+                 <a href="{% url 'team_members' team.id %}" class="view-all-link">View All</a>
               {% endif %}
             {% else %}
               No members yet

@@ -180,7 +180,7 @@ body{
 /* Section Titles */
 .section-title {
     font-size: 1.8rem;
-    color: #2575fc;
+    color: white;
     margin-bottom: 20px;
     border-bottom: 2px solid #2575fc;
     display: inline-block;

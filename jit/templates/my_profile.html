@@ -24,9 +24,11 @@
       <h3>Profile Details</h3>
       <div class="info-grid">
         <p><strong>Branch:</strong> {{ profile.branch|default:"Not specified" }}</p>
-        <p><strong>Contact:</strong> {{ profile.contact|default:"Not provided" }}</p>
+     <p><strong>Contact:</strong> {{ profile.contact|default:"Not provided" }}</p>
       </div>
+         
     </div>
+    
 
     <!-- WhatsApp Contact -->
     {% if profile.contact %}
@@ -63,9 +65,9 @@
     <!-- Resume -->
     {% if profile.resume %}
       <div class="profile-section">
-        <h3>Resume</h3>
-        <a href="{{ profile.resume.url }}" target="_blank" class="resume-link">View / Download</a>
-      </div>
+          <a href="{{ profile.resume.url }}" target="_blank" class="btn-resume">
+      📄 View / Download Resume
+    </a>
     {% endif %}
 
     <!-- Buttons -->

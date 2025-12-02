@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% load static %}
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,62 +8,58 @@
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="logo" style="color: white;">✨ JIT Skill Connect</div>
-        <div>
+    <!-- 🌐 Navigation -->
+    <nav class="navbar">
+<img src="{% static 'images/new_logo.png' %}" alt="no imag ">
+        <div class="nav-links">
             <a href="{% url 'dashboard' %}">Home</a>
             <a href="{% url 'search_students' %}">Search Students</a>
             <a href="{% url 'my_profile' %}">Profile</a>
             <a href="{% url 'my_teams' %}">Teams</a>
+            <a href="{% url 'invitations_list' %}">Requests</a>
             <a href="{% url 'logout' %}">Logout</a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
- <!-- Hero + Quick Actions Combined -->
-<section id="hero" style="padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #6a11cb, #2575fc); color: white;">
-    <h1 style="font-size: 2.8rem; margin-bottom: 20px;">Welcome, {{ request.user.username }}!</h1>
-    <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 40px;">
-        Discover talented students, showcase your skills, form teams, and collaborate on amazing projects.
-    </p>
+    <!-- 🦸 Hero Section -->
+    <section id="hero">
+        <h1>Welcome, {{ request.user.username }}!</h1>
+        <p>
+            Discover talented students, showcase your skills, form teams, and collaborate on amazing projects.
+        </p>
 
-    <div class="feature-cards" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-        <div class="card" style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; width: 250px; text-align: center;">
-            <h3>Add / Update Skills</h3>
-    
-            <a href="{% url 'add_skills' %}" class="btn btn-register">Go</a>
+        <div class="feature-cards">
+            <div class="card">
+                <h3>Add / Update Skills</h3>
+                <a href="{% url 'add_skills' %}" class="btn btn-register">Go</a>
+            </div>
+            <div class="card">
+                <h3>Browse / Search Students</h3>
+                <a href="{% url 'search_students' %}" class="btn btn-register">Go</a>
+            </div>
+            <div class="card">
+                <h3>Build Team</h3>
+                <a href="{% url 'my_teams' %}" class="btn btn-register">Go</a>
+            </div>
         </div>
-        <div class="card" style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; width: 250px; text-align: center;">
-            <h3>Browse / Search Students</h3>
-            <!-- <p>Search for students by skill or browse all registered students to form teams easily.</p> -->
-            <a href="{% url 'search_students' %}" class="btn btn-register">Go</a>
-        </div>
-    </div>
-</section>
+    </section>
 
-
-    <!-- Featured Students Section -->
+    <!-- 👥 Latest Students -->
     <section id="featured">
         <h2>🌟 Latest Registered Students</h2>
-        <br>
-        <br>
-        <div class="feature-cards">
+        <div class="feature-cards students-grid">
             {% for student in latest_students %}
-                <div class="card">
-               {% if student.profile_photo %}
-                    <img src="{{ student.profile_photo.url }}" 
-                         alt="{{ student.user.username }}" 
-                         style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:10px;">
-                {% endif %}
-                        <p>{{ student.user.username }}</p>
-                
-                    <p>{{ student.branch }}</p>
-                    <p>Skills: 
+                <div class="student-card">
+                    {% if student.profile_photo %}
+                        <img src="{{ student.profile_photo.url }}" alt="{{ student.user.username }}">
+                    {% endif %}
+                    <h4>Username : {{ student.user.username }}</h4>
+                    <p class="branch"> Branch :{{ student.branch }}</p>
+                    <p class="skills">
                         {% for skill in student.skills.all %}
-                            {{ skill.name }}{% if not forloop.last %}, {% endif %}
+                            <span> Skills : {{ skill.name }}</span>
                         {% empty %}
-                            No skills yet
+                            <span>No skills yet</span>
                         {% endfor %}
                     </p>
                     <a href="{% url 'profile_detail' student.id %}" class="btn btn-login">View Profile</a>

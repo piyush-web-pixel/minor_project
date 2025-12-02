@@ -1,0 +1,186 @@
+/* ===== Invitations Page Styling ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  min-height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Navbar ===== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  z-index: 1000;
+}
+
+nav .logo {
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+}
+
+nav .nav-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+nav .nav-links a:hover {
+  color: #ffcc00;
+}
+
+/* ===== Invitations Section ===== */
+.invites-section {
+  padding: 120px 50px 60px;
+  text-align: center;
+}
+
+.invites-section h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+/* ===== Container Grid ===== */
+.invites-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== Card Styling ===== */
+.invite-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px 20px;
+  width: 100%;
+  max-width: 300px;
+  text-align: left;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.invite-card:hover {
+  transform: translateY(-5px);
+}
+
+.invite-card p {
+  margin: 10px 0;
+  color: #fff;
+  font-size: 15px;
+}
+
+.status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  color: #ffcc00;
+}
+
+.status.accepted {
+  color: #00ff99;
+}
+
+.status.rejected {
+  color: #ff4444;
+}
+
+/* ===== Buttons & Form ===== */
+textarea {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn {
+  width: 48%;
+  padding: 10px 0;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+  color: white;
+}
+
+.btn.accept {
+  background: #25d366;
+}
+
+.btn.reject {
+  background: #ff4444;
+}
+
+.btn.accept:hover {
+  background: #1db954;
+}
+
+.btn.reject:hover {
+  background: #cc0000;
+}
+
+.reason {
+  background: rgba(255, 0, 0, 0.2);
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.no-invites {
+  color: #fff;
+  font-style: italic;
+}
+
+/* ===== Footer ===== */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  margin-top: auto;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .invites-section {
+    padding: 100px 20px;
+  }
+
+  .invite-card {
+    max-width: 100%;
+  }
+}
+

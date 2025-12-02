@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import UserRegisterForm, StudentProfileForm, AddSkillForm,Team
-from .models import Skill, StudentProfile,Team
+from .models import Skill, StudentProfile,Team,TeamInvitation
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import UserRegisterForm  # Only the user form
-# from .models import Team
+from .forms import UserRegisterForm 
 from .forms import TeamForm,AddMemberForm
 
 def register(request):
@@ -99,12 +98,6 @@ def search_students(request):
 
 
 
-# @login_required
-# def my_profile(request):
-#     profile = StudentProfile.objects.get(user=request.user)
-#     return render(request, 'my_profile.html', {'profile': profile})
-
-
 
 from django.contrib.auth.decorators import login_required
 from .models import StudentProfile
@@ -166,12 +159,24 @@ def dashboard(request):
 
 
 
+# def profile_detail(request, id):
+#     # Get the student or 404 if not found
+#     student = get_object_or_404(StudentProfile, id=id)
+#     return render(request, 'profile_detail.html', {'profile': student})
+
+@login_required
 def profile_detail(request, id):
-    # Get the student or 404 if not found
     student = get_object_or_404(StudentProfile, id=id)
-    return render(request, 'profile_detail.html', {'profile': student})
 
+    # Get teams where user is creator or member
+    user_teams = Team.objects.filter(
+        Q(creator=request.user) | Q(members=request.user)
+    ).distinct()
 
+    return render(request, 'profile_detail.html', {
+        'profile': student,
+        'user_teams': user_teams
+    })
 
 
 
@@ -220,10 +225,10 @@ from .models import Team
 
 @login_required
 def my_teams(request):
-    # Teams created by the user
+
     created_teams = Team.objects.filter(creator=request.user)
 
-    # Teams the user joined (but did not create)
+
     joined_teams = Team.objects.filter(members=request.user).exclude(creator=request.user)
 
     return render(request, 'my_teams.html', {
@@ -242,39 +247,39 @@ from django.contrib.auth.models import User
 from .forms import AddMemberForm
 from django.db.models import Q
 
-@login_required
-def add_member_to_team(request, team_id):
-    team = get_object_or_404(Team, id=team_id)
+# @login_required
+# def add_member_to_team(request, team_id):
+#     team = get_object_or_404(Team, id=team_id)
 
-    # Only the creator can add members
-    if request.user != team.creator:
-        messages.error(request, "Only the team creator can add members.")
-        return redirect('my_teams')
+#     # Only the creator can add members
+#     if request.user != team.creator:
+#         messages.error(request, "Only the team creator can add members.")
+#         return redirect('my_teams')
 
-    students = None
-    query = request.GET.get('q', '')
+#     students = None
+#     query = request.GET.get('q', '')
 
-    # Search functionality
-    if query:
-        students = StudentProfile.objects.filter(
-            Q(user__username__icontains=query) |
-            Q(skills__name__icontains=query)
-        ).distinct()
+#     # Search functionality
+#     if query:
+#         students = StudentProfile.objects.filter(
+#             Q(user__username__icontains=query) |
+#             Q(skills__name__icontains=query)
+#         ).distinct()
 
-    if request.method == 'POST':
-        student_id = request.POST.get('student_id')
-        try:
-            student = StudentProfile.objects.get(id=student_id)
-            if student.user in team.members.all():
-                messages.warning(request, f"{student.user.username} is already in the team.")
-            else:
-                team.members.add(student.user)
-                messages.success(request, f"{student.user.username} added successfully to {team.name}.")
-        except StudentProfile.DoesNotExist:
-            messages.error(request, "Selected student does not exist.")
-        return redirect('add_member', team_id=team.id)
+#     if request.method == 'POST':
+#         student_id = request.POST.get('student_id')
+#         try:
+#             student = StudentProfile.objects.get(id=student_id)
+#             if student.user in team.members.all():
+#                 messages.warning(request, f"{student.user.username} is already in the team.")
+#             else:
+#                 team.members.add(student.user)
+#                 messages.success(request, f"{student.user.username} added successfully to {team.name}.")
+#         except StudentProfile.DoesNotExist:
+#             messages.error(request, "Selected student does not exist.")
+#         return redirect('add_member', team_id=team.id)
 
-    return render(request, 'add_member.html', {'team': team, 'students': students, 'query': query})
+#     return render(request, 'add_member.html', {'team': team, 'students': students, 'query': query})
 
 
 
@@ -340,4 +345,128 @@ def delete_team(request, team_id):
 
 
 
+
+
+@login_required
+def add_member_to_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+
+    if request.user != team.creator:
+        messages.error(request, "Only the team creator can add members.")
+        return redirect('my_teams')
+
+    students = None
+    query = request.GET.get('q', '')
+
+    if query:
+        students = StudentProfile.objects.filter(
+            Q(user__username__icontains=query) |
+            Q(skills__name__icontains=query)
+        ).distinct()
+
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        try:
+            student = StudentProfile.objects.get(id=student_id)
+            existing_invite = TeamInvitation.objects.filter(
+                team=team, receiver=student.user, status='pending'
+            ).exists()
+
+            if existing_invite:
+                messages.warning(request, f"An invitation has already been sent to {student.user.username}.")
+            elif student.user in team.members.all():
+                messages.warning(request, f"{student.user.username} is already in the team.")
+            else:
+                TeamInvitation.objects.create(
+                    team=team,
+                    sender=request.user,
+                    receiver=student.user
+                )
+                messages.success(request, f"Invitation sent to {student.user.username}.")
+        except StudentProfile.DoesNotExist:
+            messages.error(request, "Selected student does not exist.")
+        return redirect('add_member', team_id=team.id)
+
+    # 🟢 Fetch team invitations stats
+    invitations = team.invitations.all().select_related('receiver')
+    total_sent = invitations.count()
+    accepted_count = invitations.filter(status='accepted').count()
+    rejected_count = invitations.filter(status='rejected').count()
+
+    return render(request, 'add_member.html', {
+        'team': team,
+        'students': students,
+        'query': query,
+        'invitations': invitations,
+        'total_sent': total_sent,
+        'accepted_count': accepted_count,
+        'rejected_count': rejected_count,
+    })
+
+
+
+@login_required
+def handle_invitation(request, invitation_id):
+    invitation = get_object_or_404(TeamInvitation, id=invitation_id, receiver=request.user)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'accept':
+            invitation.status = 'accepted'
+            invitation.team.members.add(request.user)
+            invitation.save()
+            messages.success(request, f"You have joined {invitation.team.name}.")
+
+        elif action == 'reject':
+            reason = request.POST.get('reason', '')
+            invitation.status = 'rejected'
+            invitation.reason = reason
+            invitation.save()
+            messages.info(request, f"You rejected the invitation to {invitation.team.name}.")
+        
+        return redirect('invitations_list')
+
+    return render(request, 'handle_invitation.html', {'invitation': invitation})
+
+
+
+
+@login_required
+def invitations_list(request):
+    invitations = TeamInvitation.objects.filter(receiver=request.user).order_by('-created_at')
+    return render(request, 'invitations_list.html', {'invitations': invitations})
+
+
+
+
+
+
+@login_required
+def send_team_invitation(request, team_id, student_id):
+    team = get_object_or_404(Team, id=team_id)
+    student = get_object_or_404(StudentProfile, id=student_id)
+
+    # Only the team creator can send invitations
+    if request.user != team.creator:
+        messages.error(request, "Only the team creator can send invitations.")
+        return redirect('profile_detail', id=student.id)
+
+
+    # Check existing invites
+    existing_invite = TeamInvitation.objects.filter(team=team, receiver=student.user, status='pending').exists()
+
+    if existing_invite:
+        messages.warning(request, f"An invitation has already been sent to {student.user.username}.")
+    elif student.user in team.members.all():
+        messages.info(request, f"{student.user.username} is already a member of {team.name}.")
+    else:
+        TeamInvitation.objects.create(
+            team=team,
+            sender=request.user,
+            receiver=student.user
+        )
+        messages.success(request, f"Invitation sent to {student.user.username} for {team.name}!")
+
+    return redirect('profile_detail', id=student.id)
 

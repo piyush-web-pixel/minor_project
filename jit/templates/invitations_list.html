@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Team Invitations - JIT Skill Connect</title>
+  <link rel="stylesheet" href="{% static 'css/invitations.css' %}">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">✨ JIT Skill Connect</div>
+    <div class="nav-links">
+      <a href="{% url 'dashboard' %}">Home</a>
+      <a href="{% url 'search_students' %}">Search Students</a>
+      <a href="{% url 'my_profile' %}">Profile</a>
+      <a href="{% url 'my_teams' %}">Teams</a>
+      <a href="{% url 'invitations_list' %}">Requests</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </div>
+  </nav>
+
+  <section class="invites-section">
+    <h2>Your Team Invitations</h2>
+
+    <div class="invites-container">
+      {% for invite in invitations %}
+        <div class="invite-card">
+          <p><strong>{{ invite.sender.username }}</strong> invited you to join 
+             <strong>{{ invite.team.name }}</strong></p>
+          <p>Status: <span class="status {{ invite.status }}">{{ invite.status }}</span></p>
+
+          {% if invite.status == 'pending' %}
+            <form method="post" action="{% url 'handle_invitation' invite.id %}">
+              {% csrf_token %}
+              <textarea name="reason" placeholder="Reason (if rejecting)"></textarea>
+              <div class="btn-group">
+                <button class="btn accept" name="action" value="accept">Accept</button>
+                <button class="btn reject" name="action" value="reject">Reject</button>
+              </div>
+            </form>
+          {% elif invite.status == 'rejected' %}
+            <p class="reason">Reason: {{ invite.reason }}</p>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="no-invites">No invitations yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <footer>© 2025 JIT Skill Connect | Made with ❤️ by Team JIT</footer>
+</body>
+</html>
