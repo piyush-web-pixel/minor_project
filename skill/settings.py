@@ -82,24 +82,26 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Your top-level static folder
-]
-
-# Optional: enable compression for better performance
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-
-
-# # ----------------------
-# # STATIC & MEDIA FILES
-# # ----------------------
 # STATIC_URL = '/static/'
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",  # Your top-level static folder
+# ]
 
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
+# # Optional: enable compression for better performance
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ----------------------
+# STATIC & MEDIA FILES
+# ----------------------
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'jit' / 'static',
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
